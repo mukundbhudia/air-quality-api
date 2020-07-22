@@ -4,11 +4,16 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "start": "tsc && node dist/server.js",
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
+    "start": "node dist/server.js",
+    "serve": "tsc && node dist/server.js",
     "localnm": "tsc && nodemon dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc",
-    "postinstall": "npm run tsc"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "ext": "*.ts, *.js, *.json, *.mjs",
+    "ignore": ["test/*", "docs/*"]
   },
   "author": "",
   "license": "ISC",
