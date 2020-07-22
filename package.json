@@ -2,11 +2,10 @@
   "name": "air-quality-api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "node ./src/server.js",
-    "local": "env LOCAL=true node ./src/server.js",
-    "localnm": "env LOCAL=true nodemon ./src/server.js",
+    "start": "tsc && node dist/server.js",
+    "localnm": "tsc && nodemon dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -20,6 +19,9 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "@types/express": "^4.17.7",
+    "nodemon": "^2.0.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.9.7"
   }
 }
