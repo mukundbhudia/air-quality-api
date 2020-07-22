@@ -6,7 +6,9 @@
   "scripts": {
     "start": "tsc && node dist/server.js",
     "localnm": "tsc && nodemon dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "postinstall": "npm run tsc"
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +23,7 @@
   "devDependencies": {
     "@types/express": "^4.17.7",
     "nodemon": "^2.0.2",
-    "tslint": "^5.12.1",
+    "tslint": "^6.1.2",
     "typescript": "^3.9.7"
   }
 }
