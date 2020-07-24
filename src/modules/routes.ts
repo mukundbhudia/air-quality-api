@@ -6,13 +6,13 @@ const client = getClient()
 const getAsync = promisify(client.get).bind(client)
 
 export const home = async (req, res) => {
-  const timeStamp = await homeRoot()
+  const timeStamp: string = await homeRoot()
   res.json({ msg: `Welcome to the air quality API! Server start time is: ${timeStamp}` })
 }
 
 export const search = async (req, res) => {
   const keyword: string = req.query && req.query.q
-  let data = null
+  let data: any = null
   if (keyword) {
     const qk = await getAsync(`qk_${keyword}`)
     if (qk) {
