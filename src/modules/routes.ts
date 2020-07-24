@@ -1,33 +1,26 @@
-import { connectDB, getClient } from './dbClient'
-import axios from 'axios'
+import { promisify } from 'util'
+import { getClient } from './dbClient'
+import { homeRoot, keyWordSearch } from './actions'
 
-const { promisify } = require("util")
-connectDB()
 const client = getClient()
 const getAsync = promisify(client.get).bind(client)
-client.set('server-timestamp', new Date())
 
 export const home = async (req, res) => {
-  const timeStamp = await getAsync('server-timestamp')
+  const timeStamp = await homeRoot()
   res.json({ msg: `Welcome to the air quality API! Server start time is: ${timeStamp}` })
 }
 
 export const search = async (req, res) => {
-  const keyword: string = req.query && req.query.keyword
+  const keyword: string = req.query && req.query.q
+  let data = null
   if (keyword) {
-    axios.get('https://api.waqi.info/search/', {
-      params: {
-        token: process.env.API_TOKEN,
-        keyword: keyword
-      }
-    })
-    .then((response) => {
-      res.json( {'data': response.data.data as Array<any>} )
-    })
-    .catch((error) => {
-      console.error(error)
-      res.status(400).json( {'msg': error} )
-    })
+    const qk = await getAsync(`qk_${keyword}`)
+    if (qk) {
+      data = JSON.parse(qk)
+    } else {
+      data = await keyWordSearch(keyword)
+    }
+    res.json( { data } )
   } else {
     res.status(400).json({ 'msg': 'No keyword supplied' })
   }

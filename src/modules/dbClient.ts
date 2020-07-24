@@ -1,4 +1,5 @@
 import redis from 'redis'
+import { promisify } from 'util'
 import { initLogger } from './logger'
 initLogger()
 
@@ -15,3 +16,7 @@ export const connectDB = async (): Promise<any> => {
 }
 
 export const getClient = (): any => client
+
+export const getAsync = async (key) => {
+  return await promisify(client.get).bind(client)
+}
