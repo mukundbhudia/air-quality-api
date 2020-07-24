@@ -20,6 +20,7 @@ const startServer = async () => {
   app.use(bodyParser.json(bodyParserOptions))
   app.get('/', routes.home)
   app.get('/search', routes.search)
+  app.get('/getStation', routes.getStation)
 
   app.listen(PORT, () => {
     const welcomeString = `Listening at http://localhost:${PORT}`
