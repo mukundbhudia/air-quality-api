@@ -3,7 +3,7 @@ import { initLogger } from './logger'
 initLogger()
 
 let client: any
-const REDIS_URL: string|number = parseInt(process.env.REDIS_URL) || 6379
+const REDIS_URL: string|number = process.env.REDIS_URL || 6379
 
 export const connectDB = async (): Promise<any> => {
   try {
