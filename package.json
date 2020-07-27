@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",
+  "engines": {
+    "node": "14.x.x",
+    "npm": "6.x.x"
+  },
   "scripts": {
     "build-ts": "tsc",
     "postinstall": "npm run build-ts",
