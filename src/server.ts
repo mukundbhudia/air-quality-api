@@ -17,14 +17,16 @@ const bodyParserOptions = {
 
 const startServer = async () => {
   app.use(cors())
-  app.use(bodyParser.json(bodyParserOptions))
-  app.get('/', routes.home)
-  app.get('/search', routes.search)
-  app.get('/getStation', routes.getStation)
+    .use(bodyParser.json(bodyParserOptions))
+    .get('/', routes.home)
+    .get('/search', routes.search)
+    .get('/getStation', routes.getStation)
+    .get('/getNearestStation', routes.getNearestStation)
+    .get('/getStationsInBounds', routes.getStationsInBounds)
 
   app.listen(PORT, () => {
     const welcomeString = `Listening at http://localhost:${PORT}`
-    console.log(welcomeString)
+    console.info(welcomeString)
     // logger.info(welcomeString)
   })
 }

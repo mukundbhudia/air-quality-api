@@ -56,4 +56,45 @@ export const getStationData = async (stnId: string): Promise<any> => {
     console.error(error)
     return error
   }
-} 
+}
+
+export const getNearestStationData = async (lat: number, lng: number): Promise<any> => {
+  try {
+    const response = await axios.get(`https://api.waqi.info/feed/geo:${lat};${lng}/`, {
+      params: {
+        token: process.env.API_TOKEN,
+      }
+    })
+
+    if (response && response.data && response.data.status === 'ok') {
+      client.setex(`stn-nr_${lat}-${lng}`, CACHE_TTL, JSON.stringify(response.data.data))
+      return response && response.data && response.data.data
+    } else {
+      return 'Error retrieving data from API.'
+    }
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+export const getStationsInBoundsData = async (ul_lat: number, ul_lng: number, lr_lat: number, lr_lng: number): Promise<any> => {
+  try {
+    const response = await axios.get(`https://api.waqi.info/map/bounds/`, {
+      params: {
+        token: process.env.API_TOKEN,
+        latlng: `${ul_lat},${ul_lng},${lr_lat},${lr_lng}`
+      }
+    })
+
+    if (response && response.data && response.data.status === 'ok') {
+      client.setex(`stn-bnd_${ul_lat}-${ul_lng}-${lr_lat}-${lr_lng}`, CACHE_TTL, JSON.stringify(response.data.data))
+      return response && response.data && response.data.data
+    } else {
+      return 'Error retrieving data from API.'
+    }
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
