@@ -21,6 +21,7 @@ const startServer = async () => {
     .get('/', routes.home)
     .get('/search', routes.search)
     .get('/getStation', routes.getStation)
+    .get('/getMultipleStations', routes.getMultipleStations)
     .get('/getNearestStation', routes.getNearestStation)
     .get('/getStationsInBounds', routes.getStationsInBounds)
 

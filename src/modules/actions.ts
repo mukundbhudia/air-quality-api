@@ -38,6 +38,27 @@ export const keyWordSearch = async (keyword: string): Promise<any> => {
   }
 }
 
+export const getMultipleStationData = async (stationIds: Array<string>): Promise<any> => {
+  let allStations: Array<string> = []
+
+  try {
+    for (const stnId of stationIds) {
+      const stationData = await getStationData(stnId)
+      allStations.push(stationData)
+    }
+
+    if (allStations && allStations.length > 0) {
+      client.setex(`mult_stn_${stationIds.join('-')}`, CACHE_TTL, JSON.stringify(allStations))
+      return allStations
+    } else {
+      return 'Error retrieving data from API.'
+    }
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
 export const getStationData = async (stnId: string): Promise<any> => {
   try {
     const response = await axios.get(`https://api.waqi.info/feed/@${stnId}/`, {

@@ -4,6 +4,7 @@ import {
   homeRoot,
   keyWordSearch,
   getStationData,
+  getMultipleStationData,
   getNearestStationData,
   getStationsInBoundsData,
 } from './actions'
@@ -48,6 +49,24 @@ export const getStation = async (req, res) => {
     res.json( { data } )
   } else {
     res.status(400).json({ 'msg': 'No station supplied' })
+  }
+}
+
+export const getMultipleStations = async (req, res) => {
+  // const stnId: string = req.query && req.query.stnId
+  let allStations: Array<string> = ['5115', '5724']
+  let data: any = null
+  if (allStations) {
+    const stationData = await getAsync(`mult_stn_${allStations.join('-')}`)
+    
+    if (stationData) {
+      data = JSON.parse(stationData)
+    } else {
+      data = await getMultipleStationData(allStations)
+    }
+    res.json( { data } )
+  } else {
+    res.status(400).json({ 'msg': 'No station array supplied' })
   }
 }
 
