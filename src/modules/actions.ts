@@ -9,6 +9,7 @@ connectDB()
 const client = getClient()
 const getAsync = promisify(client.get).bind(client)
 const CACHE_TTL: number = 60 * 60   // Time in seconds key lives in cache
+const ERROR_API_GET = { 'err': 'Error retrieving data from API.' }
 
 client.set('server-timestamp', new Date())
 
@@ -30,7 +31,7 @@ export const keyWordSearch = async (keyword: string): Promise<any> => {
       client.setex(`qk_${keyword}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data
     } else {
-      return 'Error retrieving data from API.'
+      return ERROR_API_GET
     }
   } catch (error) {
     console.error(error)
@@ -51,7 +52,7 @@ export const getMultipleStationData = async (stationIds: Array<string>): Promise
       client.setex(`mult_stn_${stationIds.join('-')}`, CACHE_TTL, JSON.stringify(allStations))
       return allStations
     } else {
-      return 'Error retrieving data from API.'
+      return ERROR_API_GET
     }
   } catch (error) {
     console.error(error)
@@ -71,7 +72,7 @@ export const getStationData = async (stnId: string): Promise<any> => {
       client.setex(`stn_${stnId}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data
     } else {
-      return 'Error retrieving data from API.'
+      return ERROR_API_GET
     }
   } catch (error) {
     console.error(error)
@@ -91,7 +92,7 @@ export const getNearestStationData = async (lat: number, lng: number): Promise<a
       client.setex(`stn-nr_${lat}-${lng}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data
     } else {
-      return 'Error retrieving data from API.'
+      return ERROR_API_GET
     }
   } catch (error) {
     console.error(error)
@@ -112,7 +113,7 @@ export const getStationsInBoundsData = async (ul_lat: number, ul_lng: number, lr
       client.setex(`stn-bnd_${ul_lat}-${ul_lng}-${lr_lat}-${lr_lng}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data
     } else {
-      return 'Error retrieving data from API.'
+      return ERROR_API_GET
     }
   } catch (error) {
     console.error(error)

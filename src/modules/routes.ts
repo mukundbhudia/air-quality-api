@@ -53,8 +53,14 @@ export const getStation = async (req, res) => {
 }
 
 export const getMultipleStations = async (req, res) => {
-  // const stnId: string = req.query && req.query.stnId
-  let allStations: Array<string> = ['5115', '5724']
+  let allStations: Array<string> = []
+  try {
+    allStations = req.query && req.query.stnIds && req.query.stnIds.split(',')
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({ 'msg': 'Unable to process station ID array' })
+  }
+  
   let data: any = null
   if (allStations) {
     const stationData = await getAsync(`mult_stn_${allStations.join('-')}`)
@@ -66,7 +72,7 @@ export const getMultipleStations = async (req, res) => {
     }
     res.json( { data } )
   } else {
-    res.status(400).json({ 'msg': 'No station array supplied' })
+    res.status(400).json({ 'msg': 'No station ID array supplied' })
   }
 }
 
