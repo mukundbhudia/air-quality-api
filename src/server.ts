@@ -26,9 +26,9 @@ const startServer = async () => {
     .get('/getStationsInBounds', routes.getStationsInBounds)
 
   app.listen(PORT, () => {
-    const welcomeString = `Listening at http://localhost:${PORT}`
-    console.info(welcomeString)
-    // logger.info(welcomeString)
+    const welcomeMessage: string = `Listening at http://localhost:${PORT}`
+    console.info(welcomeMessage)
+    // logger.info(welcomeMessage)
   })
 }
   

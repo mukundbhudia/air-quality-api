@@ -20,7 +20,7 @@ export const home = async (req, res) => {
   })
 }
 
-export const search = async (req, res) => {
+export const search = async (req, res): Promise<any> => {
   const keyword: string = req.query && req.query.q
   let data: any = null
   if (keyword) {
@@ -36,7 +36,7 @@ export const search = async (req, res) => {
   }
 }
 
-export const getStation = async (req, res) => {
+export const getStation = async (req, res): Promise<any> => {
   const stnId: string = req.query && req.query.stnId
   let data: any = null
   if (stnId) {
@@ -52,7 +52,7 @@ export const getStation = async (req, res) => {
   }
 }
 
-export const getMultipleStations = async (req, res) => {
+export const getMultipleStations = async (req, res): Promise<any> => {
   let allStations: Array<string> = []
   try {
     allStations = req.query && req.query.stnIds && req.query.stnIds.split(',')
@@ -70,13 +70,15 @@ export const getMultipleStations = async (req, res) => {
     } else {
       data = await getMultipleStationData(allStations)
     }
-    res.json( { data } )
+    setTimeout(() => {
+      res.json( { data } )
+    }, 2000);
   } else {
     res.status(400).json({ 'msg': 'No station ID array supplied' })
   }
 }
 
-export const getNearestStation = async (req, res) => {
+export const getNearestStation = async (req, res): Promise<any> => {
   const lat: string = req.query && req.query.lat
   const lng: string = req.query && req.query.lng
   let data: any = null
@@ -99,7 +101,7 @@ export const getNearestStation = async (req, res) => {
   }
 }
 
-export const getStationsInBounds = async (req, res) => {
+export const getStationsInBounds = async (req, res): Promise<any> => {
   const param_ul_lat: string = req.query && req.query.ul_lat
   const param_ul_lng: string = req.query && req.query.ul_lng
   const param_lr_lat: string = req.query && req.query.lr_lat
