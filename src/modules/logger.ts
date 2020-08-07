@@ -2,7 +2,7 @@ import winston from 'winston'
 
 export const initLogger = () => {
   const logger = winston.createLogger({
-    level: 'info',
+    level: 'debug',
     format: winston.format.combine(
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss'
@@ -11,7 +11,7 @@ export const initLogger = () => {
       // winston.format.splat(),
       winston.format.json()
     ),
-    defaultMeta: { service: 'lux-api' },
+    // defaultMeta: { service: 'air-quality-api' },
     transports: [
       //
       // - Write all logs with level `error` and below to `error.log`
@@ -20,7 +20,7 @@ export const initLogger = () => {
       new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
       new winston.transports.File({ filename: './logs/combined.log' })
     ]
-  });
+  })
   
   //
   // If we're not in production then log to the `console` with the format:
@@ -32,8 +32,12 @@ export const initLogger = () => {
         winston.format.colorize(),
         winston.format.simple()
       )
-    }));
+    }))
   }
 
   return logger as any
 }
+
+const logger = initLogger()
+
+export default logger

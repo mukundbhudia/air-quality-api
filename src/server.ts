@@ -1,11 +1,10 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { initLogger } from './modules/logger'
+import logger from './modules/logger'
 import * as routes from './modules/routes'
 
 require('dotenv').config()
-initLogger()
 
 const app = express()
 const PORT: number = parseInt(process.env.PORT) || 4000
@@ -28,7 +27,7 @@ const startServer = async () => {
   app.listen(PORT, () => {
     const welcomeMessage: string = `Listening at http://localhost:${PORT}`
     console.info(welcomeMessage)
-    // logger.info(welcomeMessage)
+    logger.info(welcomeMessage)
   })
 }
   

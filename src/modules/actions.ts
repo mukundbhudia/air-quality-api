@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { promisify } from 'util'
 import { connectDB, getClient } from './dbClient'
-import { initLogger } from './logger'
+import logger, { initLogger } from './logger'
 
 initLogger()
 connectDB()
@@ -26,7 +26,7 @@ export const keyWordSearch = async (keyword: string): Promise<any> => {
         keyword
       }
     })
-
+    logger.http(`Fetching 'keyWordSearch' with keyword: '${keyword}' from API`)
     if (response && response.data && response.data.status === 'ok') {
       client.setex(`qk_${keyword}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data
@@ -44,12 +44,16 @@ export const getMultipleStationData = async (stationIds: Array<string>): Promise
 
   try {
     for (const stnId of stationIds) {
-      const stationData = await getStationData(stnId)
-      allStations.push(stationData)
+      const stationData = await getAsync(`stn_${stnId}`)
+      if (stationData) {
+        logger.debug(`Serving 'getStation' with stnId: '${stnId}' from cache`)
+        allStations.push(JSON.parse(stationData))
+      } else {
+        allStations.push(await getStationData(stnId))
+      }
     }
 
     if (allStations && allStations.length > 0) {
-      client.setex(`mult_stn_${stationIds.join('-')}`, CACHE_TTL, JSON.stringify(allStations))
       return allStations
     } else {
       return ERROR_API_GET
@@ -67,7 +71,7 @@ export const getStationData = async (stnId: string): Promise<any> => {
         token: process.env.API_TOKEN,
       }
     })
-
+    logger.http(`Fetching 'getStationData' with stnId: '${stnId}' from API`)
     if (response && response.data && response.data.status === 'ok') {
       client.setex(`stn_${stnId}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data
@@ -87,7 +91,7 @@ export const getNearestStationData = async (lat: number, lng: number): Promise<a
         token: process.env.API_TOKEN,
       }
     })
-
+    logger.http(`Fetching 'getNearestStationData' with lat: ${lat}, lng:${lng} from API`)
     if (response && response.data && response.data.status === 'ok') {
       client.setex(`stn-nr_${lat}-${lng}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data
@@ -108,7 +112,7 @@ export const getStationsInBoundsData = async (ul_lat: number, ul_lng: number, lr
         latlng: `${ul_lat},${ul_lng},${lr_lat},${lr_lng}`
       }
     })
-
+    logger.http("Fetching 'getStationsInBoundsData' with bounds: ${ul_lat}-${ul_lng}-${lr_lat}-${lr_lng} from API")
     if (response && response.data && response.data.status === 'ok') {
       client.setex(`stn-bnd_${ul_lat}-${ul_lng}-${lr_lat}-${lr_lng}`, CACHE_TTL, JSON.stringify(response.data.data))
       return response && response.data && response.data.data

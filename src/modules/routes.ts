@@ -1,5 +1,6 @@
 import { promisify } from 'util'
 import { getClient } from './dbClient'
+import logger from './logger'
 import { 
   homeRoot,
   keyWordSearch,
@@ -26,6 +27,7 @@ export const search = async (req, res): Promise<any> => {
   if (keyword) {
     const qk = await getAsync(`qk_${keyword}`)
     if (qk) {
+      logger.debug(`Serving 'search' keyword: '${keyword}' with from cache`)
       data = JSON.parse(qk)
     } else {
       data = await keyWordSearch(keyword)
@@ -42,6 +44,7 @@ export const getStation = async (req, res): Promise<any> => {
   if (stnId) {
     const stationData = await getAsync(`stn_${stnId}`)
     if (stationData) {
+      logger.debug(`Serving 'getStation' with stnId: '${stnId}' from cache`)
       data = JSON.parse(stationData)
     } else {
       data = await getStationData(stnId)
@@ -63,16 +66,11 @@ export const getMultipleStations = async (req, res): Promise<any> => {
   
   let data: any = null
   if (allStations) {
-    const stationData = await getAsync(`mult_stn_${allStations.join('-')}`)
-    
+    const stationData = await getMultipleStationData(allStations)
     if (stationData) {
-      data = JSON.parse(stationData)
-    } else {
-      data = await getMultipleStationData(allStations)
+      data = stationData
     }
-    setTimeout(() => {
-      res.json( { data } )
-    }, 2000);
+    res.json( { data } )
   } else {
     res.status(400).json({ 'msg': 'No station ID array supplied' })
   }
@@ -86,6 +84,7 @@ export const getNearestStation = async (req, res): Promise<any> => {
   if (lat && lng) {
     const stationData = await getAsync(`stn-nr_${lat}-${lng}`)
     if (stationData) {
+      logger.debug(`Serving 'getNearestStation' with lat: ${lat}, lng:${lng} from cache`)
       data = JSON.parse(stationData)
     } else {
       try {
@@ -122,6 +121,7 @@ export const getStationsInBounds = async (req, res): Promise<any> => {
   if (ul_lat && ul_lng && lr_lat && lr_lng) {
     const stationData = await getAsync(`stn-bnd_${ul_lat}-${ul_lng}-${lr_lat}-${lr_lng}`)
     if (stationData) {
+      logger.debug(`Serving 'getStationsInBounds' with bounds: ${ul_lat}-${ul_lng}-${lr_lat}-${lr_lng} from cache`)
       data = JSON.parse(stationData)
     } else {
       data = await getStationsInBoundsData(
